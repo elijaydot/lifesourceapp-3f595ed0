@@ -1,6 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* LifeSource Brand Colors */
+    --primary: 16 69% 42%;          /* #D32F2F - Primary Red */
+    --primary-foreground: 0 0% 98%; /* White text on red */
+    
+    --secondary: 210 40% 90%;       /* Light blue-grey */
+    --secondary-foreground: 222 84% 4.9%;
+    
+    --accent: 207 90% 54%;          /* #1976D2 - Trust Blue */
+    --accent-foreground: 0 0% 98%;
+    
+    --success: 122 39% 49%;         /* #388E3C - Success Green */
+    --success-foreground: 0 0% 98%;
+    
+    --muted: 210 40% 98%;           /* #FAFAFA - Soft White */
+    --muted-foreground: 215 16% 47%; /* #616161 - Warm Grey */
+    
+    --background: 0 0% 100%;
+    --foreground: 222 84% 4.9%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 222 84% 4.9%;
+    
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 16 69% 42%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --radius: 0.75rem;
+    
+    /* Custom LifeSource tokens */
+    --lifesource-red: 16 69% 42%;
+    --lifesource-blue: 207 90% 54%;
+    --lifesource-green: 122 39% 49%;
+    --lifesource-grey: 215 16% 47%;
+    --lifesource-soft-white: 210 40% 98%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    --gradient-hero: linear-gradient(180deg, hsl(var(--lifesource-soft-white)), hsl(var(--background)));
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 12px -2px hsl(var(--primary) / 0.1);
+    --shadow-card: 0 2px 8px -1px hsl(var(--muted-foreground) / 0.1);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 222 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 207 90% 54%;
+    --accent-foreground: 222 84% 4.9%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-['Inter'] antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-['Poppins'];
+  }
+}
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
