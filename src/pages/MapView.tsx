@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, MapPin, Heart, AlertTriangle, Navigation, Search } from "lucide-react";
+import Map from "@/components/Map";
+import { supabase } from "@/integrations/supabase/client";
 
 // Mock map data - in real app this would come from geolocation API
 const mockPins = [
@@ -44,7 +46,22 @@ const MapView = () => {
   const navigate = useNavigate();
   const [selectedPin, setSelectedPin] = useState<typeof mockPins[0] | null>(null);
   const [searchLocation, setSearchLocation] = useState("");
-  const [userRole] = useState<"donor" | "recipient">("donor"); // Mock user role
+  const [userRole] = useState<"donor" | "recipient">("donor");
+  const [mapToken, setMapToken] = useState<string | null>(null);
+  const [userCenter, setUserCenter] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    // Get Mapbox token from Edge Function (public)
+    supabase.functions.invoke("get-mapbox-token").then(({ data, error }) => {
+      if (!error && data?.token) setMapToken(data.token);
+    });
+    // Get user location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        setUserCenter([pos.coords.longitude, pos.coords.latitude]);
+      });
+    }
+  }, []);
 
   const handleBack = () => {
     navigate("/dashboard");
@@ -130,16 +147,20 @@ const MapView = () => {
         </div>
       </div>
 
-      {/* Map Area */}
+{/* Map Area */}
       <div className="flex-1 relative bg-muted/20">
-        {/* Placeholder Map Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/30 to-muted/10 flex items-center justify-center">
-          <div className="text-center space-y-2">
-            <MapPin className="w-12 h-12 text-muted-foreground mx-auto" />
-            <p className="text-muted-foreground text-sm">Interactive Map View</p>
-            <p className="text-muted-foreground text-xs">Real map integration coming soon</p>
+        {mapToken ? (
+          <Map accessToken={mapToken} center={userCenter ?? [30, 15]} zoom={userCenter ? 12 : 3} />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-muted/30 to-muted/10 flex items-center justify-center">
+            <div className="text-center space-y-2">
+              <MapPin className="w-12 h-12 text-muted-foreground mx-auto" />
+              <p className="text-muted-foreground text-sm">Map is loading...</p>
+              <p className="text-muted-foreground text-xs">Add your Mapbox public token to enable the map.</p>
+            </div>
           </div>
-        </div>
+        )}
+
 
         {/* Mock Pins */}
         <div className="absolute inset-0 p-8">
